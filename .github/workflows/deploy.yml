@@ -29,8 +29,9 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true        # auto-enable Pages on first run (no Settings click needed)
+        # Pages must be enabled once in Settings → Pages with Source = "GitHub Actions".
+        # The default GITHUB_TOKEN lacks admin scope, so the enablement: true flag
+        # cannot auto-create the site — that step has to be done manually one time.
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
