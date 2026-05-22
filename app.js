@@ -114,15 +114,111 @@
 
     panel.innerHTML = "";
     const age = lang.planAges[selectedAgeIdx];
+    const durations = (lang.planDurations || {})[age.key] || {};
     for (const d of lang.planDimensions) {
+      const dur = durations[d.key];
       panel.append(el("div", { class: "plan-dim", "data-color": d.color },
         el("div", { class: "dim-head" },
           el("div", { class: "dim-ico" }, iconSvg(d.icon)),
           el("span", {}, d.name),
         ),
         el("p", {}, age.items[d.key] || ""),
+        dur ? el("p", { class: "dim-duration" }, dur) : null,
       ));
     }
+  }
+
+  function renderIntroBadges(lang) {
+    const wrap = $("#introBadges");
+    if (!wrap) return;
+    wrap.innerHTML = "";
+    for (const b of (lang.intro && lang.intro.badges) || []) {
+      wrap.append(el("span", { class: "badge" }, b));
+    }
+  }
+
+  function renderParentLed(lang) {
+    const grid = $("#parentLedGrid");
+    if (!grid || !lang.parentLed) return;
+    grid.innerHTML = "";
+    for (const t of lang.parentLed.topics) {
+      grid.append(el("article", { class: "parent-led-card" },
+        el("div", { class: "pl-ico" }, iconSvg(t.icon)),
+        el("h3", {}, t.title),
+        el("p",  {}, t.body),
+      ));
+    }
+  }
+
+  function renderEnvironment(lang) {
+    const grid = $("#environmentGrid");
+    const legend = $("#environmentLegend");
+    if (!grid || !lang.environment) return;
+
+    // Legend
+    legend.innerHTML = "";
+    const L = lang.environment.legend;
+    [["positive", L.positive], ["neutral", L.neutral], ["clinical", L.clinical]].forEach(([k, label]) => {
+      legend.append(el("span", { class: "legend-item" },
+        el("span", { class: `dot ${k}` }),
+        label,
+      ));
+    });
+
+    // Cards per sense
+    grid.innerHTML = "";
+    for (const s of lang.environment.senses) {
+      const ul = el("ul", {},
+        s.items.map((it) => el("li", { "data-kind": it.kind }, it.text)),
+      );
+      grid.append(el("article", { class: "env-card", "data-color": s.color },
+        el("div", { class: "env-head" },
+          el("div", { class: "env-ico" }, iconSvg(s.icon)),
+          el("h3", {}, s.name),
+        ),
+        ul,
+      ));
+    }
+  }
+
+  function renderHowTo(lang) {
+    const grid = $("#howToGrid");
+    if (!grid || !lang.howTo) return;
+    grid.innerHTML = "";
+    for (const g of lang.howTo.guides) {
+      const summary = el("summary", { class: "howto-summary" },
+        el("div", { class: "ht-ico" }, iconSvg(g.icon)),
+        el("div", { class: "ht-title-wrap" },
+          el("h3", {}, g.title),
+          g.duration ? el("span", { class: "ht-duration" }, g.duration) : null,
+        ),
+        chevronSvg(),
+      );
+      const body = el("div", { class: "howto-body" },
+        el("ol", {}, g.steps.map((s) => el("li", {}, s))),
+      );
+      const details = el("details", { class: "howto-card", "data-color": g.color },
+        summary,
+        body,
+      );
+      grid.append(details);
+    }
+  }
+
+  function chevronSvg() {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("class", "ht-chev");
+    svg.setAttribute("aria-hidden", "true");
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", "M6 9l6 6 6-6");
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "currentColor");
+    path.setAttribute("stroke-width", "2");
+    path.setAttribute("stroke-linecap", "round");
+    path.setAttribute("stroke-linejoin", "round");
+    svg.append(path);
+    return svg;
   }
 
   function renderTips(lang) {
@@ -137,10 +233,22 @@
     }
   }
 
+  // Per-language strings that aren't part of CONTENT (UI chrome / labels)
+  const RESEARCH_LINK = {
+    he: "קראו את המאמר",
+    ar: "اقرأ المقال",
+    ru: "Читать статью",
+  };
+  const TITLE_SUFFIX = {
+    he: "מדריך להורי הפג",
+    ar: "دليل أهل الخديج",
+    ru: "Руководство для родителей",
+  };
+
   function renderResearch(lang) {
     const grid = $("#researchGrid");
     grid.innerHTML = "";
-    const linkLabel = lang.lang === "ar" ? "اقرأ المقال" : "קראו את המאמר";
+    const linkLabel = RESEARCH_LINK[lang.lang] || RESEARCH_LINK.he;
     for (const r of lang.research) {
       grid.append(el("article", { class: "research-card" },
         el("h3", {}, r.title),
@@ -151,26 +259,37 @@
   }
 
   // --- language ------------------------------------------------------------
+  function updatePickerActive(code) {
+    $$(".lang-pill").forEach((btn) => {
+      if (btn.getAttribute("data-lang") === code) {
+        btn.setAttribute("aria-current", "page");
+      } else {
+        btn.removeAttribute("aria-current");
+      }
+    });
+  }
+
   function applyLanguage(code) {
     const lang = CONTENT[code] || CONTENT[DEFAULT_LANG];
     document.documentElement.lang = lang.lang;
     document.documentElement.dir  = lang.dir;
     document.title = (lang.hero.title || "SENSE & NIDCAP") + " — " +
-                     (code === "ar" ? "دليل أهل الخديج" : "מדריך להורי הפג");
+                     (TITLE_SUFFIX[code] || TITLE_SUFFIX.he);
 
     renderBoundText(lang);
     renderIntro(lang);
+    renderIntroBadges(lang);
+    renderParentLed(lang);
+    renderEnvironment(lang);
     renderSenses(lang);
     renderMethod5s(lang);
     renderSigns(lang);
     renderPlan(lang);
+    renderHowTo(lang);
     renderTips(lang);
     renderResearch(lang);
 
-    // language-switch label always shows the OTHER language
-    const switchBtn = $("#langSwitch");
-    switchBtn.textContent = lang.switchLabel;
-    switchBtn.setAttribute("data-next-lang", code === "he" ? "ar" : "he");
+    updatePickerActive(code);
   }
 
   function init() {
@@ -178,10 +297,13 @@
     const code = (stored && CONTENT[stored]) ? stored : DEFAULT_LANG;
     applyLanguage(code);
 
-    $("#langSwitch").addEventListener("click", (e) => {
-      const next = e.currentTarget.getAttribute("data-next-lang") || "ar";
-      localStorage.setItem(STORAGE_KEY, next);
-      applyLanguage(next);
+    $$(".lang-pill").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const next = btn.getAttribute("data-lang");
+        if (!next || !CONTENT[next]) return;
+        localStorage.setItem(STORAGE_KEY, next);
+        applyLanguage(next);
+      });
     });
   }
 

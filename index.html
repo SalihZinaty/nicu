@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#2a6f7a" />
   <title>SENSE &amp; NIDCAP — מדריך להורי הפג</title>
-  <meta name="description" content="מדריך ידידותי להורי הפגייה: SENSE, 5S, סימני סטרס, ותוכנית שבועית לפי גיל הפג. עברית וערבית." />
+  <meta name="description" content="מדריך ידידותי להורי הפגייה: SENSE, 5S, סימני סטרס, ותוכנית שבועית לפי גיל הפג. עברית, ערבית ורוסית." />
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -21,6 +21,7 @@
   <meta property="og:url" content="https://salihzinaty.github.io/nicu/" />
   <meta property="og:locale" content="he_IL" />
   <meta property="og:locale:alternate" content="ar" />
+  <meta property="og:locale:alternate" content="ru" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="SENSE & NIDCAP — מדריך להורי הפג" />
   <meta name="twitter:description" content="מדריך ידידותי להורי הפגייה." />
@@ -28,7 +29,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&family=Cairo:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&family=Cairo:wght@400;600;800&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -101,7 +102,11 @@
       <svg class="brand-heart"><use href="#i-heart"></use></svg>
       <span class="brand-text">SENSE &amp; NIDCAP</span>
     </div>
-    <button id="langSwitch" class="lang-switch" aria-label="Switch language">العربية</button>
+    <nav class="lang-switch" id="langSwitch" aria-label="Switch language">
+      <button class="lang-pill" data-lang="he" type="button" aria-label="עברית">עברית</button>
+      <button class="lang-pill" data-lang="ar" type="button" aria-label="العربية">العربية</button>
+      <button class="lang-pill" data-lang="ru" type="button" aria-label="Русский">Русский</button>
+    </nav>
   </header>
 
   <main id="main">
@@ -117,12 +122,12 @@
           <div class="carousel-slide" data-pos="bottom"><img src="images/incubator.jpg" alt="" loading="lazy"  /></div>
           <div class="carousel-slide" data-pos="center"><img src="images/care.jpg"      alt="" loading="lazy"  /></div>
           <div class="carousel-slide" data-pos="center"><img src="images/hand.jpg"      alt="" loading="lazy"  /></div>
-          <!-- duplicate set for seamless loop -->
-          <div class="carousel-slide" data-pos="right"> <img src="images/hero.jpg"      alt="" loading="lazy"  /></div>
-          <div class="carousel-slide" data-pos="right"> <img src="images/shush.jpg"     alt="" loading="lazy"  /></div>
-          <div class="carousel-slide" data-pos="bottom"><img src="images/incubator.jpg" alt="" loading="lazy"  /></div>
-          <div class="carousel-slide" data-pos="center"><img src="images/care.jpg"      alt="" loading="lazy"  /></div>
-          <div class="carousel-slide" data-pos="center"><img src="images/hand.jpg"      alt="" loading="lazy"  /></div>
+          <!-- duplicate set for seamless loop — eager so they're ready when the wrap happens -->
+          <div class="carousel-slide" data-pos="right" aria-hidden="true"> <img src="images/hero.jpg"      alt="" loading="eager" decoding="async" /></div>
+          <div class="carousel-slide" data-pos="right" aria-hidden="true"> <img src="images/shush.jpg"     alt="" loading="eager" decoding="async" /></div>
+          <div class="carousel-slide" data-pos="bottom" aria-hidden="true"><img src="images/incubator.jpg" alt="" loading="eager" decoding="async" /></div>
+          <div class="carousel-slide" data-pos="center" aria-hidden="true"><img src="images/care.jpg"      alt="" loading="eager" decoding="async" /></div>
+          <div class="carousel-slide" data-pos="center" aria-hidden="true"><img src="images/hand.jpg"      alt="" loading="eager" decoding="async" /></div>
         </div>
       </div>
       <div class="hero-text">
@@ -142,6 +147,28 @@
         <h2 id="intro-title" class="section-title" data-bind="intro.title"></h2>
         <div class="intro-body" data-bind-html="intro.bodyHtml"></div>
         <div class="intro-pill" data-bind="intro.pill"></div>
+        <div id="introBadges" class="intro-badges"></div>
+      </div>
+    </section>
+
+    <!-- PARENT-LED CURRICULUM -->
+    <section id="parent-led" class="parent-led" aria-labelledby="parent-led-title">
+      <div class="container">
+        <h2 id="parent-led-title" class="section-title" data-bind="parentLed.title"></h2>
+        <p class="section-intro" data-bind="parentLed.intro"></p>
+        <div id="parentLedGrid" class="parent-led-grid"></div>
+        <p class="parent-led-note" data-bind="parentLed.note"></p>
+      </div>
+    </section>
+
+    <!-- SENSORY ENVIRONMENT INVENTORY -->
+    <section id="environment" class="environment" aria-labelledby="environment-title">
+      <div class="container">
+        <h2 id="environment-title" class="section-title" data-bind="environment.title"></h2>
+        <p class="section-intro" data-bind="environment.intro"></p>
+        <div id="environmentLegend" class="env-legend"></div>
+        <div id="environmentGrid" class="environment-grid"></div>
+        <p class="environment-reminder" data-bind="environment.reminder"></p>
       </div>
     </section>
 
@@ -197,11 +224,31 @@
       </div>
     </section>
 
+    <!-- PRACTICAL HOW-TO GUIDES -->
+    <section id="how-to" class="how-to" aria-labelledby="how-to-title">
+      <div class="container">
+        <h2 id="how-to-title" class="section-title" data-bind="howTo.title"></h2>
+        <p class="section-intro" data-bind="howTo.intro"></p>
+        <div id="howToGrid" class="how-to-grid"></div>
+      </div>
+    </section>
+
     <!-- TIPS -->
     <section id="tips" class="tips" aria-labelledby="tips-title">
       <div class="container">
         <h2 id="tips-title" class="section-title" data-bind="tipsTitle"></h2>
         <div id="tipsGrid" class="tips-grid"></div>
+      </div>
+    </section>
+
+    <!-- SELF-CARE -->
+    <section id="self-care" class="self-care" aria-labelledby="self-care-title">
+      <div class="container">
+        <article class="self-care-card">
+          <svg class="self-care-icon" aria-hidden="true"><use href="#i-heart"></use></svg>
+          <h2 id="self-care-title" data-bind="selfCare.title"></h2>
+          <p data-bind="selfCare.body"></p>
+        </article>
       </div>
     </section>
 

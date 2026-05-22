@@ -46,6 +46,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 [lang="ar"] body, html[lang="ar"] body { font-family: "Cairo", "Heebo", system-ui, sans-serif; }
+[lang="ru"] body, html[lang="ru"] body { font-family: "Inter", "Heebo", system-ui, -apple-system, "Segoe UI", sans-serif; }
 img { max-width: 100%; display: block; }
 a { color: var(--teal); text-decoration: none; }
 a:hover { text-decoration: underline; }
@@ -78,14 +79,40 @@ li { margin-block: .25rem; }
 .brand-text { letter-spacing: .02em; }
 
 .lang-switch {
-  background: var(--teal); color: #fff;
-  border: 0; padding: 8px 14px; border-radius: 999px;
-  font-weight: 600; letter-spacing: .02em;
+  display: inline-flex; gap: 2px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px;
   box-shadow: var(--shadow-1);
-  transition: transform .12s ease, background .15s ease;
 }
-.lang-switch:hover { background: var(--teal-deep); }
-.lang-switch:active { transform: scale(.96); }
+.lang-pill {
+  background: transparent;
+  border: 0;
+  color: var(--ink-soft);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 600;
+  font-size: .9rem;
+  letter-spacing: .01em;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+}
+.lang-pill:hover { color: var(--teal); }
+.lang-pill:active { transform: scale(.96); }
+.lang-pill[aria-current="page"] {
+  background: var(--teal);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(20,30,40,.18);
+}
+.lang-pill[data-lang="he"] { font-family: "Heebo", system-ui, sans-serif; }
+.lang-pill[data-lang="ar"] { font-family: "Cairo", "Heebo", system-ui, sans-serif; }
+.lang-pill[data-lang="ru"] { font-family: "Inter", system-ui, sans-serif; }
+@media (max-width: 380px) {
+  /* On very narrow phones (e.g. iPhone SE) shorten the picker. */
+  .lang-pill { padding: 6px 10px; font-size: .82rem; }
+}
 
 /* ========================================================================
    SECTIONS
@@ -136,29 +163,69 @@ section { padding: 56px 0; }
   --slide-aspect: 3 / 4;      /* every slide is portrait — same height for all */
   --carousel-duration: 40s;
   padding-block: 14px;
+  /* Leading breathing room — lives on the container (not the track) so it
+     doesn't break the seamless -50% wrap math. */
+  padding-inline-start: 12px;
+  /* Force GPU compositing — fixes iOS Safari clipping/flicker bugs when
+     the inner track is animated. */
+  -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+  isolation: isolate;            /* fresh stacking context, prevents iOS z-index quirks */
 }
 .hero-carousel::after {
   content: "";
   position: absolute; inset: 0;
   pointer-events: none;
+  /* Use direct `to bottom` keyword — Safari has spotty support for `to inline-end`. */
   background: linear-gradient(to bottom, rgba(253,250,244,0) 80%, var(--bg) 100%);
   z-index: 2;
 }
 .carousel-track {
   display: flex;
   width: max-content;
-  gap: 12px;
-  padding-inline: 12px;
-  animation: carousel-scroll var(--carousel-duration) linear infinite;
+  /* Some older Safari/iOS versions miscompute `width: max-content`
+     on flex containers. min-width gives a working floor. */
+  min-width: 200%;
+  /* NB: no `gap` and no `padding-inline` here on purpose.
+     Spacing lives on each slide (margin-inline-end) so that both halves
+     of the track have IDENTICAL widths. The animation translates by
+     exactly -50% — any asymmetry (e.g. trailing padding) would cause
+     a visible jump when the loop wraps. */
+  -webkit-animation: carousel-scroll var(--carousel-duration) linear infinite;
+          animation: carousel-scroll var(--carousel-duration) linear infinite;
   will-change: transform;
+  /* Promote to its own layer (belt-and-suspenders with will-change). */
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
 }
 .carousel-slide {
   flex: 0 0 var(--slide-w);
-  aspect-ratio: var(--slide-aspect);   /* drives slide height — all identical */
+  /* Spacing between slides — also keeps each half of the track exactly the
+     same width (5 × slide_w + 5 × 12px = 50% of 10-slide track). */
+  margin-inline-end: 12px;
+  /* iOS Safari ≤15.4 has bugs computing aspect-ratio inside flex items.
+     The padding-top hack below acts as a fallback height; modern browsers
+     ignore it because aspect-ratio wins specificity-wise. */
+  aspect-ratio: var(--slide-aspect);
   background: linear-gradient(180deg, #f1ebde 0%, #e9e2d3 100%);
   border-radius: var(--r-md);
   box-shadow: var(--shadow-1);
   overflow: hidden;
+  position: relative;            /* anchors the absolutely-positioned <img> fallback */
+}
+/* Aspect-ratio fallback for older iOS Safari: when @supports fails, use a
+   padding-top spacer. The slide width is var(--slide-w); 3/4 aspect →
+   height = width × 4/3, so padding-top: calc(var(--slide-w) * 4 / 3). */
+@supports not (aspect-ratio: 1) {
+  .carousel-slide {
+    height: 0;
+    padding-top: calc(var(--slide-w) * 4 / 3);
+  }
+  .carousel-slide img {
+    position: absolute; inset: 0;
+  }
 }
 .carousel-slide img {
   width: 100%;
@@ -172,23 +239,36 @@ section { padding: 56px 0; }
 .carousel-slide[data-pos="left"]   img { object-position: 28% center; }
 .carousel-slide[data-pos="top"]    img { object-position: center 22%; }
 .carousel-slide[data-pos="bottom"] img { object-position: center 70%; }
+@-webkit-keyframes carousel-scroll {
+  from { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+  to   { -webkit-transform: translate3d(-50%, 0, 0); transform: translate3d(-50%, 0, 0); }
+}
 @keyframes carousel-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+  to   { -webkit-transform: translate3d(-50%, 0, 0); transform: translate3d(-50%, 0, 0); }
 }
 [dir="rtl"] .carousel-track {
-  animation-name: carousel-scroll-rtl;
+  -webkit-animation-name: carousel-scroll-rtl;
+          animation-name: carousel-scroll-rtl;
+}
+@-webkit-keyframes carousel-scroll-rtl {
+  from { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+  to   { -webkit-transform: translate3d(50%, 0, 0); transform: translate3d(50%, 0, 0); }
 }
 @keyframes carousel-scroll-rtl {
-  from { transform: translateX(0); }
-  to   { transform: translateX(50%); }
+  from { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+  to   { -webkit-transform: translate3d(50%, 0, 0); transform: translate3d(50%, 0, 0); }
 }
 .hero-carousel:hover .carousel-track,
 .hero-carousel:focus-within .carousel-track {
-  animation-play-state: paused;
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {
-  .carousel-track { animation-duration: 120s; }
+  .carousel-track {
+    -webkit-animation-duration: 120s;
+            animation-duration: 120s;
+  }
 }
 .hero-text {
   padding: 12px 20px 40px;
@@ -221,8 +301,13 @@ section { padding: 56px 0; }
     --carousel-duration: 55s;
   }
   .hero-carousel::after {
+    /* Direct keywords for Safari compatibility — RTL override below. */
     background:
-      linear-gradient(to inline-end, rgba(253,250,244,0) 70%, var(--bg) 100%);
+      linear-gradient(to right, rgba(253,250,244,0) 70%, var(--bg) 100%);
+  }
+  [dir="rtl"] .hero-carousel::after {
+    background:
+      linear-gradient(to left, rgba(253,250,244,0) 70%, var(--bg) 100%);
   }
   .hero-text { text-align: start; padding: 40px 48px; }
   .hero-title { font-size: clamp(48px, 6vw, 80px); }
@@ -242,6 +327,240 @@ section { padding: 56px 0; }
   background: var(--coral-soft); color: #8a3a2c;
   padding: 10px 18px; border-radius: 999px;
   font-weight: 600; font-size: .98rem;
+}
+
+/* ========================================================================
+   INTRO BADGES
+   ======================================================================== */
+.intro-badges {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 16px;
+}
+.intro-badges .badge {
+  background: #fff; border: 1px solid var(--line);
+  color: var(--teal); padding: 6px 12px; border-radius: 999px;
+  font-size: .85rem; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.intro-badges .badge::before {
+  content: ""; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--coral);
+}
+
+/* ========================================================================
+   PARENT-LED CURRICULUM
+   ======================================================================== */
+.parent-led { background: var(--bg); }
+.parent-led-grid {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+}
+@media (min-width: 600px) { .parent-led-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 980px) { .parent-led-grid { grid-template-columns: repeat(7, 1fr); } }
+.parent-led-card {
+  background: var(--bg-card);
+  border-radius: var(--r-md);
+  padding: 14px 12px;
+  box-shadow: var(--shadow-1);
+  text-align: center;
+  border-top: 3px solid var(--teal);
+}
+.parent-led-card .pl-ico {
+  width: 38px; height: 38px;
+  margin: 0 auto 8px;
+  border-radius: 50%;
+  background: #eaf2f3; color: var(--teal);
+  display: grid; place-items: center;
+}
+.parent-led-card .pl-ico svg { width: 22px; height: 22px; }
+.parent-led-card h3 {
+  margin: 0 0 4px; font-size: .95rem; font-weight: 800; color: var(--navy);
+}
+.parent-led-card p { margin: 0; color: var(--ink-soft); font-size: .82rem; line-height: 1.4; }
+.parent-led-note {
+  margin-top: 18px; text-align: center;
+  font-size: .92rem; color: var(--ink-soft); font-style: italic;
+}
+
+/* ========================================================================
+   SENSORY ENVIRONMENT INVENTORY
+   ======================================================================== */
+.environment { background: linear-gradient(180deg, var(--bg) 0%, #f6efe2 100%); }
+.env-legend {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin: 0 0 22px;
+}
+.env-legend .legend-item {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: .85rem; color: var(--ink-soft); font-weight: 600;
+}
+.env-legend .dot {
+  display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+}
+.env-legend .dot.positive { background: #4a8a6a; }
+.env-legend .dot.neutral  { background: #b8b09b; }
+.env-legend .dot.clinical { background: #c0594a; }
+
+.environment-grid {
+  display: grid; gap: 12px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 600px) { .environment-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 980px) { .environment-grid { grid-template-columns: repeat(5, 1fr); align-items: stretch; } }
+
+.env-card {
+  background: var(--bg-card);
+  border-radius: var(--r-md);
+  padding: 16px 14px;
+  box-shadow: var(--shadow-1);
+  display: flex; flex-direction: column;
+}
+.env-card .env-head {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px;
+}
+.env-card .env-ico {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.env-card .env-ico svg { width: 22px; height: 22px; }
+.env-card h3 { margin: 0; font-size: 1rem; font-weight: 800; }
+.env-card ul { list-style: none; padding: 0; margin: 0; }
+.env-card li {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 4px 0; font-size: .88rem;
+  border-bottom: 1px dashed rgba(0,0,0,.06);
+  color: var(--ink);
+}
+.env-card li:last-child { border-bottom: 0; }
+.env-card li::before {
+  content: ""; flex-shrink: 0;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #b8b09b;
+}
+.env-card li[data-kind="positive"]::before { background: #4a8a6a; }
+.env-card li[data-kind="clinical"]::before { background: #c0594a; }
+
+.env-card[data-color="mint"]     .env-ico { background: var(--mint-circle);     color: var(--mint-ink); }
+.env-card[data-color="mint"]     h3       { color: var(--mint-ink); }
+.env-card[data-color="lavender"] .env-ico { background: var(--lavender-circle); color: var(--lavender-ink); }
+.env-card[data-color="lavender"] h3       { color: var(--lavender-ink); }
+.env-card[data-color="butter"]   .env-ico { background: var(--butter-circle);   color: var(--butter-ink); }
+.env-card[data-color="butter"]   h3       { color: var(--butter-ink); }
+.env-card[data-color="pink"]     .env-ico { background: var(--pink-circle);     color: var(--pink-ink); }
+.env-card[data-color="pink"]     h3       { color: var(--pink-ink); }
+.env-card[data-color="sky"]      .env-ico { background: var(--sky-circle);      color: var(--sky-ink); }
+.env-card[data-color="sky"]      h3       { color: var(--sky-ink); }
+
+.environment-reminder {
+  margin: 22px 0 0; text-align: center;
+  background: var(--coral-soft); color: #8a3a2c;
+  padding: 12px 20px; border-radius: 999px;
+  font-weight: 600; font-size: .95rem;
+  display: inline-block;
+}
+
+/* ========================================================================
+   PRACTICAL HOW-TO GUIDES
+   ======================================================================== */
+.how-to { background: var(--bg); }
+.how-to-grid {
+  display: grid; gap: 12px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 760px) { .how-to-grid { grid-template-columns: 1fr 1fr; } }
+
+.howto-card {
+  background: var(--bg-card);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.howto-summary {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+.howto-summary::-webkit-details-marker { display: none; }
+.howto-summary .ht-ico {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #eaf2f3; color: var(--teal);
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.howto-summary .ht-ico svg { width: 26px; height: 26px; }
+.howto-summary .ht-title-wrap { flex: 1; min-width: 0; }
+.howto-summary h3 { margin: 0 0 2px; font-size: 1.02rem; font-weight: 800; color: var(--navy); }
+.howto-summary .ht-duration {
+  font-size: .82rem; color: var(--ink-muted);
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.howto-summary .ht-chev {
+  width: 20px; height: 20px; flex-shrink: 0;
+  color: var(--teal);
+  transition: transform .2s ease;
+}
+details[open] .howto-summary .ht-chev { transform: rotate(180deg); }
+.howto-body {
+  padding: 0 18px 18px;
+  border-top: 1px dashed var(--line);
+}
+.howto-body ol {
+  margin: 14px 0 0; padding-inline-start: 1.3rem;
+  color: var(--ink); font-size: .95rem; line-height: 1.55;
+}
+.howto-body ol li { margin-bottom: 6px; }
+
+.howto-card[data-color="mint"]     .ht-ico { background: var(--mint-circle);     color: var(--mint-ink); }
+.howto-card[data-color="lavender"] .ht-ico { background: var(--lavender-circle); color: var(--lavender-ink); }
+.howto-card[data-color="butter"]   .ht-ico { background: var(--butter-circle);   color: var(--butter-ink); }
+.howto-card[data-color="pink"]     .ht-ico { background: var(--pink-circle);     color: var(--pink-ink); }
+.howto-card[data-color="sky"]      .ht-ico { background: var(--sky-circle);      color: var(--sky-ink); }
+
+/* ========================================================================
+   SELF-CARE
+   ======================================================================== */
+.self-care { background: var(--bg); padding: 20px 0 36px; }
+.self-care-card {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  background: linear-gradient(135deg, var(--coral-soft) 0%, #fff 100%);
+  border-radius: var(--r-lg);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-1);
+  border: 1px solid #f3c3b6;
+}
+.self-care-card .self-care-icon {
+  width: 42px; height: 42px;
+  color: var(--coral);
+  margin-bottom: 10px;
+}
+.self-care-card h2 {
+  margin: 0 0 10px; font-size: 1.25rem;
+  color: #8a3a2c; font-weight: 800;
+}
+.self-care-card p {
+  margin: 0; color: var(--ink); max-width: 60ch; line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* ========================================================================
+   PLAN — duration badge
+   ======================================================================== */
+.dim-duration {
+  margin-top: 8px !important;
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: .82rem !important;
+  font-weight: 700;
+  color: var(--teal) !important;
+  background: #eaf2f3;
+  padding: 4px 10px; border-radius: 999px;
+  align-self: flex-start;
+}
+.dim-duration::before {
+  content: "⏱"; font-size: .9em;
 }
 
 /* ========================================================================
