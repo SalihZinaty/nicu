@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2a6f7a" />
+  <title>404 — לא נמצא · غير موجود</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&family=Cairo:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100svh; }
+    body {
+      font-family: "Heebo", "Cairo", system-ui, sans-serif;
+      background: #fdfaf4;
+      color: #1f2937;
+      display: grid; place-items: center;
+      padding: 24px;
+      text-align: center;
+    }
+    .card {
+      max-width: 520px;
+      background: #fff;
+      border-radius: 22px;
+      padding: 40px 28px;
+      box-shadow: 0 6px 28px rgba(20,30,40,.08);
+    }
+    .heart {
+      width: 64px; height: 64px;
+      margin: 0 auto 12px;
+      color: #d97464;
+    }
+    .num {
+      font-size: 72px; font-weight: 900;
+      color: #2a6f7a; margin: 0; letter-spacing: -.02em;
+    }
+    h1 { font-size: 22px; margin: 6px 0 4px; color: #2d3e6f; }
+    .ar { direction: rtl; font-family: "Cairo", sans-serif; color: #4b5563; margin: 4px 0 18px; }
+    .he { color: #4b5563; margin: 0 0 18px; }
+    a.btn {
+      display: inline-block;
+      background: #2a6f7a; color: #fff;
+      padding: 12px 24px; border-radius: 999px;
+      text-decoration: none; font-weight: 700;
+      box-shadow: 0 4px 16px rgba(20,30,40,.10);
+    }
+    a.btn:hover { background: #1f5a64; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <svg class="heart" viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M24 40s-14-8-14-20a8 8 0 0 1 14-5 8 8 0 0 1 14 5c0 12-14 20-14 20Z"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    </svg>
+    <p class="num">404</p>
+    <h1>הדף לא נמצא · الصفحة غير موجودة</h1>
+    <p class="he">הקישור שניסיתם להגיע אליו לא קיים. נחזור יחד לעמוד הראשי.</p>
+    <p class="ar">الرابط الذي حاولتم الوصول إليه غير موجود. لنعد معًا إلى الصفحة الرئيسية.</p>
+    <a class="btn" href="./">חזרה לעמוד הראשי · العودة للصفحة الرئيسية</a>
+  </div>
+</body>
+</html>
