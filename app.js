@@ -72,18 +72,6 @@
     }
   }
 
-  function renderMethod5s(lang) {
-    const grid = $("#method5sGrid");
-    grid.innerHTML = "";
-    for (const m of lang.method5s) {
-      grid.append(el("article", { class: "five-s-card" },
-        el("span", { class: "s-pill" }, m.s),
-        el("h3", {}, m.title),
-        el("p",  {}, m.body),
-      ));
-    }
-  }
-
   function renderSigns(lang) {
     const stressUl = $("#signsStressList");
     const calmUl   = $("#signsCalmList");
@@ -142,11 +130,19 @@
     if (!grid || !lang.parentLed) return;
     grid.innerHTML = "";
     for (const t of lang.parentLed.topics) {
-      grid.append(el("article", { class: "parent-led-card" },
+      // Each topic links to a section on the page; clicking smooth-scrolls
+      // there (the global `scroll-behavior: smooth` handles the animation).
+      const card = el("a", {
+        class: "parent-led-card",
+        href: t.target || "#",
+        "aria-label": t.title,
+      },
         el("div", { class: "pl-ico" }, iconSvg(t.icon)),
         el("h3", {}, t.title),
         el("p",  {}, t.body),
-      ));
+        el("span", { class: "pl-chev", "aria-hidden": "true" }, "↓"),
+      );
+      grid.append(card);
     }
   }
 
@@ -221,18 +217,6 @@
     return svg;
   }
 
-  function renderTips(lang) {
-    const grid = $("#tipsGrid");
-    grid.innerHTML = "";
-    for (const t of lang.tips) {
-      grid.append(el("article", { class: "tip-card" },
-        el("div", { class: "tip-ico" }, iconSvg(t.icon)),
-        el("h3", {}, t.title),
-        el("p",  {}, t.body),
-      ));
-    }
-  }
-
   // Per-language strings that aren't part of CONTENT (UI chrome / labels)
   const RESEARCH_LINK = {
     he: "קראו את המאמר",
@@ -282,19 +266,39 @@
     renderParentLed(lang);
     renderEnvironment(lang);
     renderSenses(lang);
-    renderMethod5s(lang);
     renderSigns(lang);
     renderPlan(lang);
     renderHowTo(lang);
-    renderTips(lang);
     renderResearch(lang);
 
     updatePickerActive(code);
   }
 
+  // Detect the visitor's preferred language from the browser. We walk
+  // navigator.languages (the user's full preference order) and pick the
+  // first tag whose base code (`he`/`ar`/`ru`) maps to a supported locale.
+  // Falls back to DEFAULT_LANG (Hebrew) for everything else — e.g. English
+  // or French speakers see Hebrew, matching the hospital's primary language.
+  function detectLang() {
+    const list = (navigator.languages && navigator.languages.length)
+      ? navigator.languages
+      : [navigator.language || ""];
+    for (const tag of list) {
+      let base = String(tag || "").toLowerCase().split("-")[0];
+      if (base === "iw") base = "he";   // legacy ISO code for Hebrew
+      if (base === "ji") base = "yi";   // no-op but documents intent
+      if (CONTENT[base]) return base;
+    }
+    return DEFAULT_LANG;
+  }
+
   function init() {
+    // Order of precedence:
+    //  1. User's prior manual choice (localStorage)
+    //  2. Browser language preference
+    //  3. Hebrew default
     const stored = localStorage.getItem(STORAGE_KEY);
-    const code = (stored && CONTENT[stored]) ? stored : DEFAULT_LANG;
+    const code = (stored && CONTENT[stored]) ? stored : detectLang();
     applyLanguage(code);
 
     $$(".lang-pill").forEach((btn) => {

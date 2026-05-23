@@ -353,30 +353,66 @@ section { padding: 56px 0; }
 .parent-led { background: var(--bg); }
 .parent-led-grid {
   display: grid; gap: 12px;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 1fr;
 }
 @media (min-width: 600px) { .parent-led-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (min-width: 980px) { .parent-led-grid { grid-template-columns: repeat(7, 1fr); } }
+@media (min-width: 980px) { .parent-led-grid { grid-template-columns: repeat(5, 1fr); } }
+
+/* Cards are anchor links — keyboard-accessible, smooth-scroll on click. */
 .parent-led-card {
+  position: relative;
+  display: flex; flex-direction: column;
   background: var(--bg-card);
   border-radius: var(--r-md);
-  padding: 14px 12px;
+  padding: 16px 14px 28px;
   box-shadow: var(--shadow-1);
   text-align: center;
   border-top: 3px solid var(--teal);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
 }
+.parent-led-card:hover,
+.parent-led-card:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 24px rgba(20,30,40,.10);
+  border-top-color: var(--coral);
+  text-decoration: none;
+}
+.parent-led-card:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
 .parent-led-card .pl-ico {
-  width: 38px; height: 38px;
-  margin: 0 auto 8px;
+  width: 42px; height: 42px;
+  margin: 0 auto 10px;
   border-radius: 50%;
   background: #eaf2f3; color: var(--teal);
   display: grid; place-items: center;
+  transition: background .15s ease, color .15s ease;
 }
-.parent-led-card .pl-ico svg { width: 22px; height: 22px; }
+.parent-led-card:hover .pl-ico { background: var(--coral-soft); color: var(--coral); }
+.parent-led-card .pl-ico svg { width: 24px; height: 24px; }
 .parent-led-card h3 {
-  margin: 0 0 4px; font-size: .95rem; font-weight: 800; color: var(--navy);
+  margin: 2px 0 4px; font-size: 1rem; font-weight: 800; color: var(--navy);
 }
-.parent-led-card p { margin: 0; color: var(--ink-soft); font-size: .82rem; line-height: 1.4; }
+.parent-led-card p { margin: 0; color: var(--ink-soft); font-size: .85rem; line-height: 1.45; }
+
+/* Chevron in the bottom-center signals "scrolls to a section". */
+.parent-led-card .pl-chev {
+  position: absolute;
+  bottom: 8px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px; line-height: 1;
+  color: var(--teal);
+  opacity: .55;
+  transition: opacity .15s ease, transform .2s ease;
+}
+.parent-led-card:hover .pl-chev,
+.parent-led-card:focus-visible .pl-chev {
+  opacity: 1;
+  transform: translateX(-50%) translateY(2px);
+  color: var(--coral);
+}
+
 .parent-led-note {
   margin-top: 18px; text-align: center;
   font-size: .92rem; color: var(--ink-soft); font-style: italic;
@@ -615,30 +651,6 @@ details[open] .howto-summary .ht-chev { transform: rotate(180deg); }
 .sense-card[data-color="sky"]      h3 { color: var(--sky-ink); }
 
 /* ========================================================================
-   5S
-   ======================================================================== */
-.five-s { background: #fbf6ed; }
-.five-s-grid {
-  display: grid; gap: 10px;
-  grid-template-columns: 1fr;
-}
-@media (min-width: 600px) { .five-s-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 980px) { .five-s-grid { grid-template-columns: repeat(5, 1fr); } }
-.five-s-card {
-  background: var(--bg-card);
-  border-radius: var(--r-md);
-  padding: 18px 16px;
-  box-shadow: var(--shadow-1);
-}
-.five-s-card .s-pill {
-  display: inline-block; background: var(--teal); color: #fff;
-  font-weight: 800; padding: 4px 10px; border-radius: 999px;
-  margin-bottom: 8px; font-size: .85rem;
-}
-.five-s-card h3 { margin: 0 0 6px; font-size: 1rem; font-weight: 700; }
-.five-s-card p { margin: 0; color: var(--ink-soft); font-size: .92rem; }
-
-/* ========================================================================
    STRESS / CALM SIGNS
    ======================================================================== */
 .signs { background: var(--bg); }
@@ -716,32 +728,6 @@ details[open] .howto-summary .ht-chev { transform: rotate(180deg); }
 .plan-dim[data-color="butter"]   .dim-ico { background: var(--butter-circle);   color: var(--butter-ink); }
 .plan-dim[data-color="pink"]     .dim-ico { background: var(--pink-circle);     color: var(--pink-ink); }
 .plan-dim[data-color="sky"]      .dim-ico { background: var(--sky-circle);      color: var(--sky-ink); }
-
-/* ========================================================================
-   TIPS
-   ======================================================================== */
-.tips { background: var(--bg); }
-.tips-grid {
-  display: grid; gap: 14px;
-  grid-template-columns: repeat(2, 1fr);
-}
-@media (min-width: 600px) { .tips-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (min-width: 980px) { .tips-grid { grid-template-columns: repeat(6, 1fr); } }
-.tip-card {
-  background: var(--bg-card);
-  border-radius: var(--r-md);
-  padding: 18px 14px;
-  text-align: center;
-  box-shadow: var(--shadow-1);
-}
-.tip-ico {
-  width: 56px; height: 56px; border-radius: 50%;
-  background: #eaf2f3; color: var(--teal);
-  display: grid; place-items: center; margin: 0 auto 10px;
-}
-.tip-ico svg { width: 30px; height: 30px; }
-.tip-card h3 { margin: 4px 0 6px; font-size: 1rem; }
-.tip-card p { margin: 0; color: var(--ink-soft); font-size: .87rem; line-height: 1.45; }
 
 /* ========================================================================
    RESEARCH
