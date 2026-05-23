@@ -285,7 +285,22 @@ section { padding: 56px 0; }
   font-weight: 900; letter-spacing: -.01em;
 }
 .hero-title::first-line { color: var(--teal); }
-.hero-tagline { color: var(--ink-soft); margin: 0 auto; max-width: 36ch; }
+
+/* Multi-paragraph subtitle replaces the old single-line tagline. */
+.hero-subtitle {
+  color: var(--ink-soft);
+  margin: 0 auto;
+  max-width: 60ch;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.hero-subtitle p { margin: 0 0 12px; }
+.hero-subtitle p:last-child { margin-bottom: 0; }
+.hero-subtitle strong {
+  color: var(--teal);
+  font-weight: 800;
+  letter-spacing: .02em;
+}
 .scroll-hint {
   display: inline-flex; align-items: center; gap: 6px;
   margin-top: 18px;
@@ -310,7 +325,8 @@ section { padding: 56px 0; }
       linear-gradient(to left, rgba(253,250,244,0) 70%, var(--bg) 100%);
   }
   .hero-text { text-align: start; padding: 40px 48px; }
-  .hero-title { font-size: clamp(48px, 6vw, 80px); }
+  .hero-title { font-size: clamp(40px, 5vw, 68px); }
+  .hero-subtitle { margin-inline: 0; font-size: 1.05rem; }
 }
 
 /* ========================================================================
@@ -611,10 +627,127 @@ details[open] .howto-summary .ht-chev { transform: rotate(180deg); }
 @media (min-width: 600px) { .senses-grid { grid-template-columns: 1fr 1fr; } }
 @media (min-width: 980px) { .senses-grid { grid-template-columns: repeat(5, 1fr); align-items: stretch; } }
 
+/* ---- 3D flip wrapper -------------------------------------------------- */
+.sense-flip {
+  /* reset native button look */
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  perspective: 1400px;
+  display: block;
+}
+.sense-flip:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 4px;
+  border-radius: var(--r-lg);
+}
+.sense-flip .card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform .65s cubic-bezier(.4, 0, .2, 1);
+}
+.sense-flip.is-flipped .card-inner {
+  transform: rotateY(180deg);
+}
+[dir="rtl"] .sense-flip.is-flipped .card-inner {
+  /* RTL feels more natural flipping the other way */
+  transform: rotateY(-180deg);
+}
+
+.face-front,
+.face-back {
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  border-radius: var(--r-lg);
+}
+.face-front {
+  /* Front is in normal flow — its content drives the card height. */
+  position: relative;
+  height: 100%;
+  display: flex; flex-direction: column;
+}
+.face-front .flip-hint {
+  position: absolute;
+  bottom: 10px; inset-inline-end: 12px;
+  font-size: 16px;
+  color: var(--ink-muted);
+  opacity: .55;
+  transition: opacity .15s ease, transform .2s ease;
+  line-height: 1;
+}
+.sense-flip:hover .face-front .flip-hint,
+.sense-flip:focus-visible .face-front .flip-hint {
+  opacity: 1;
+  transform: rotate(45deg);
+  color: var(--teal);
+}
+.face-back {
+  /* Back overlays the front in the same box. */
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  background-size: cover;
+  background-position: center;
+  background-color: #1c2a36;     /* fallback while the image loads */
+  box-shadow: var(--shadow-1);
+  overflow: hidden;
+}
+[dir="rtl"] .face-back {
+  transform: rotateY(-180deg);
+  -webkit-transform: rotateY(-180deg);
+}
+.face-back::after {
+  /* subtle dark gradient at the corners so the label + hint stay readable */
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,.45) 100%),
+    linear-gradient(0deg,   rgba(0,0,0,0) 75%, rgba(0,0,0,.30) 100%);
+  pointer-events: none;
+}
+.face-back .back-label {
+  position: absolute;
+  top: 14px; inset-inline-start: 14px;
+  z-index: 1;
+  background: rgba(255,255,255,.92);
+  color: var(--navy);
+  font-weight: 800;
+  font-size: .9rem;
+  padding: 6px 12px;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+}
+.face-back .back-hint {
+  position: absolute;
+  bottom: 14px; inset-inline-end: 16px;
+  z-index: 1;
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0,0,0,.45);
+  opacity: .85;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sense-flip .card-inner { transition: none; }
+  .face-front .flip-hint { transition: none; }
+}
+
 .sense-card {
   background: var(--bg-card);
   border-radius: var(--r-lg);
-  padding: 22px 18px 18px;
+  padding: 22px 18px 28px;
   box-shadow: var(--shadow-1);
   display: flex; flex-direction: column;
   border: 1px solid transparent;

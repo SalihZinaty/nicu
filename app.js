@@ -57,18 +57,65 @@
     $(".intro-body").innerHTML = html;
   }
 
+  function renderHeroSubtitle(lang) {
+    const wrap = $("#heroSubtitle");
+    if (!wrap) return;
+    const paragraphs = (lang.hero && lang.hero.subtitle) || [];
+    // Inline HTML is intentional — we wrap the word "SENSE" in <strong>
+    // inside the source content for emphasis.
+    wrap.innerHTML = paragraphs.map((p) => `<p>${p}</p>`).join("");
+  }
+
+  // Photo shown on the back of each sense card. Keyed by sense.key so it
+  // stays language-agnostic (he/ar/ru all share the same image).
+  const SENSE_BACK_IMAGES = {
+    touch:   "images/nurse-incubator.jpg",
+    hearing: "images/nurse-cuddle.jpg",
+    smell:   "images/father-kangaroo.jpg",
+    taste:   "images/teast.jpg",
+    sight:   "images/sensory-cards.jpg",
+  };
+
   function renderSenses(lang) {
     const grid = $("#sensesGrid");
     grid.innerHTML = "";
     for (const s of lang.senses) {
-      const card = el("article", { class: "sense-card", "data-color": s.color },
+      // Front face — the existing card content.
+      const front = el("article", { class: "sense-card face-front", "data-color": s.color },
         el("div", { class: "ico-wrap" }, iconSvg(s.icon)),
         el("h3", {}, s.name),
         el("p",  { class: "why" }, s.why),
         el("ul", {}, s.tips.map((t) => el("li", {}, t))),
         s.signs ? el("p", { class: "signs" }, s.signs) : null,
+        el("span", { class: "flip-hint", "aria-hidden": "true" }, "↻"),
       );
-      grid.append(card);
+
+      // Back face — the photo + a small label so users still know which sense.
+      const backImg = SENSE_BACK_IMAGES[s.key];
+      const back = el("div", {
+        class: "face-back",
+        "data-color": s.color,
+        style: backImg ? `background-image:url('${backImg}');` : "",
+      },
+        el("span", { class: "back-label" }, s.name),
+        el("span", { class: "back-hint", "aria-hidden": "true" }, "↺"),
+      );
+
+      // Button wrapper — keyboard-accessible, holds the 3D flip animation.
+      const flip = el("button", {
+        class: "sense-flip",
+        type: "button",
+        "aria-pressed": "false",
+        "aria-label": s.name,
+        onclick: function () {
+          const flipped = this.classList.toggle("is-flipped");
+          this.setAttribute("aria-pressed", flipped ? "true" : "false");
+        },
+      },
+        el("div", { class: "card-inner" }, front, back),
+      );
+
+      grid.append(flip);
     }
   }
 
@@ -261,6 +308,7 @@
                      (TITLE_SUFFIX[code] || TITLE_SUFFIX.he);
 
     renderBoundText(lang);
+    renderHeroSubtitle(lang);
     renderIntro(lang);
     renderIntroBadges(lang);
     renderParentLed(lang);
