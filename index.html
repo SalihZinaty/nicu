@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#2a6f7a" />
-  <title>SENSE &amp; NIDCAP — מדריך להורי הפג</title>
+  <title>SENSE — מדריך להורי הפג</title>
   <meta name="description" content="מדריך ידידותי להורי הפגייה: SENSE, 5S, סימני סטרס, ותוכנית שבועית לפי גיל הפג. עברית, ערבית ורוסית." />
 
   <!-- Favicon -->
@@ -13,7 +13,7 @@
 
   <!-- Open Graph / social preview -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="SENSE & NIDCAP — מדריך להורי הפג" />
+  <meta property="og:title" content="SENSE — מדריך להורי הפג" />
   <meta property="og:description" content="מדריך ידידותי להורי הפגייה: SENSE, 5S, סימני סטרס, ותוכנית שבועית לפי גיל הפג. עברית וערבית." />
   <meta property="og:image" content="https://nicu.salehz.com/og.jpg" />
   <meta property="og:image:width" content="1200" />
@@ -23,7 +23,7 @@
   <meta property="og:locale:alternate" content="ar" />
   <meta property="og:locale:alternate" content="ru" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="SENSE & NIDCAP — מדריך להורי הפג" />
+  <meta name="twitter:title" content="SENSE — מדריך להורי הפג" />
   <meta name="twitter:description" content="מדריך ידידותי להורי הפגייה." />
   <meta name="twitter:image" content="https://nicu.salehz.com/og.jpg" />
 
@@ -100,7 +100,7 @@
   <header class="topbar">
     <div class="brand">
       <svg class="brand-heart"><use href="#i-heart"></use></svg>
-      <span class="brand-text">SENSE &amp; NIDCAP</span>
+      <span class="brand-text">SENSE</span>
     </div>
     <nav class="lang-switch" id="langSwitch" aria-label="Switch language">
       <button class="lang-pill" data-lang="he" type="button" aria-label="עברית">עברית</button>
@@ -142,10 +142,8 @@
     </section>
 
     <!-- INTRO -->
-    <section id="intro" class="intro" aria-labelledby="intro-title">
+    <section id="intro" class="intro">
       <div class="container">
-        <h2 id="intro-title" class="section-title" data-bind="intro.title"></h2>
-        <div class="intro-body" data-bind-html="intro.bodyHtml"></div>
         <div class="intro-pill" data-bind="intro.pill"></div>
         <div id="introBadges" class="intro-badges"></div>
       </div>
@@ -176,6 +174,7 @@
     <section id="senses" class="senses" aria-labelledby="senses-title">
       <div class="container">
         <h2 id="senses-title" class="section-title" data-bind="sensesTitle"></h2>
+        <p class="section-intro" data-bind="sensesIntro"></p>
         <div id="sensesGrid" class="senses-grid"></div>
       </div>
     </section>
@@ -202,6 +201,7 @@
             <p class="sign-cta" data-bind="signsCalm.cta"></p>
           </article>
         </div>
+        <aside id="signsNote" class="howto-note" hidden></aside>
       </div>
     </section>
 
@@ -221,6 +221,7 @@
         <h2 id="how-to-title" class="section-title" data-bind="howTo.title"></h2>
         <p class="section-intro" data-bind="howTo.intro"></p>
         <div id="howToGrid" class="how-to-grid"></div>
+        <aside id="howToNote" class="howto-note" hidden></aside>
       </div>
     </section>
 

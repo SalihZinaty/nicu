@@ -1,5 +1,5 @@
 /* =========================================================================
-   SENSE & NIDCAP — bilingual NICU SPA
+   SENSE — trilingual NICU SPA
    Pastel palette, mobile-first, RTL-aware.
    ========================================================================= */
 
@@ -570,6 +570,42 @@ details[open] .howto-summary .ht-chev { transform: rotate(180deg); }
 .howto-card[data-color="butter"]   .ht-ico { background: var(--butter-circle);   color: var(--butter-ink); }
 .howto-card[data-color="pink"]     .ht-ico { background: var(--pink-circle);     color: var(--pink-ink); }
 .howto-card[data-color="sky"]      .ht-ico { background: var(--sky-circle);      color: var(--sky-ink); }
+
+/* Closing note under the How-To cards: rest-and-care reminder. */
+.howto-note {
+  margin-top: 22px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--butter-bg);
+  border: 1px solid #ecd896;
+  border-radius: var(--r-md);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-1);
+}
+.howto-note[hidden] { display: none; }
+.howto-note-ico {
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--butter-circle);
+  color: var(--butter-ink);
+  display: grid; place-items: center;
+}
+.howto-note-ico svg { width: 24px; height: 24px; }
+.howto-note-body { flex: 1; min-width: 0; }
+.howto-note-body h3 {
+  margin: 0 0 4px;
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: var(--butter-ink);
+}
+.howto-note-body p {
+  margin: 0;
+  color: var(--ink);
+  font-size: .95rem;
+  line-height: 1.55;
+}
 
 /* ========================================================================
    SELF-CARE

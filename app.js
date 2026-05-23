@@ -52,11 +52,6 @@
     });
   }
 
-  function renderIntro(lang) {
-    const html = (lang.intro.body || []).map((p) => `<p>${p}</p>`).join("");
-    $(".intro-body").innerHTML = html;
-  }
-
   function renderHeroSubtitle(lang) {
     const wrap = $("#heroSubtitle");
     if (!wrap) return;
@@ -125,6 +120,26 @@
     stressUl.innerHTML = ""; calmUl.innerHTML = "";
     lang.signsStress.list.forEach((t) => stressUl.append(el("li", {}, t)));
     lang.signsCalm.list.forEach((t)   => calmUl.append(el("li", {}, t)));
+
+    // Closing rest-and-care note below both cards.
+    const noteEl = $("#signsNote");
+    if (noteEl) {
+      const n = lang.signsNote;
+      if (n) {
+        noteEl.innerHTML = "";
+        noteEl.append(
+          el("div", { class: "howto-note-ico", "aria-hidden": "true" }, iconSvg("clock")),
+          el("div", { class: "howto-note-body" },
+            el("h3", {}, n.title || ""),
+            el("p",  {}, n.body  || ""),
+          ),
+        );
+        noteEl.hidden = false;
+      } else {
+        noteEl.hidden = true;
+        noteEl.innerHTML = "";
+      }
+    }
   }
 
   let selectedAgeIdx = 0;
@@ -246,6 +261,26 @@
       );
       grid.append(details);
     }
+
+    // Optional closing note at the bottom of the section.
+    const noteEl = $("#howToNote");
+    if (noteEl) {
+      const n = lang.howTo.note;
+      if (n) {
+        noteEl.innerHTML = "";
+        noteEl.append(
+          el("div", { class: "howto-note-ico", "aria-hidden": "true" }, iconSvg("clock")),
+          el("div", { class: "howto-note-body" },
+            el("h3", {}, n.title || ""),
+            el("p",  {}, n.body  || ""),
+          ),
+        );
+        noteEl.hidden = false;
+      } else {
+        noteEl.hidden = true;
+        noteEl.innerHTML = "";
+      }
+    }
   }
 
   function chevronSvg() {
@@ -304,12 +339,11 @@
     const lang = CONTENT[code] || CONTENT[DEFAULT_LANG];
     document.documentElement.lang = lang.lang;
     document.documentElement.dir  = lang.dir;
-    document.title = (lang.hero.title || "SENSE & NIDCAP") + " — " +
+    document.title = (lang.hero.title || "SENSE") + " — " +
                      (TITLE_SUFFIX[code] || TITLE_SUFFIX.he);
 
     renderBoundText(lang);
     renderHeroSubtitle(lang);
-    renderIntro(lang);
     renderIntroBadges(lang);
     renderParentLed(lang);
     renderEnvironment(lang);
