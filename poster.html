@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SENSE — יחד מקדמים התפתחות · معًا ندعم النمو · Вместе ради развития (A1 Poster)</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Cairo:wght@400;500;700;800;900&family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       A1 PORTRAIT — 594 x 841 mm — Trilingual (HE / AR / RU)
+       Designed to be readable from 1.5–2 m
+       ============================================================ */
+    @page { size: 594mm 841mm; margin: 0; }
+
+    @media print {
+      html, body { background: #fff !important; }
+      .stage { transform: none !important; margin: 0 !important; padding: 0 !important; }
+      .toolbar { display: none !important; }
+      .page { box-shadow: none !important; margin: 0 !important; }
+    }
+
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    /* ---------- design tokens ---------- */
+    :root {
+      --cream:     #fdfaf4;
+      --ink:       #1f2937;
+      --navy:      #2d3e6f;
+      --teal:      #2a6f7a;
+      --teal-deep: #1f5a64;
+      --coral:     #d97464;
+      --muted:     #4b5563;
+
+      --c-hear:  #d3e5f5;   /* sky    */
+      --c-touch: #f5d7d7;   /* pink   */
+      --c-smell: #d9d4f0;   /* lavender */
+      --c-sight: #c8eadf;   /* mint   */
+      --c-taste: #f8e9c5;   /* butter */
+
+      --c-calm:    #e2efe6;
+      --c-stress:  #fbe1d8;
+      --c-helper:  #eef2f7;
+
+      /* language tag colors */
+      --tag-he: #2a6f7a;
+      --tag-ar: #b3603d;
+      --tag-ru: #5b6b9a;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: #2d2d2d;
+      font-family: "Heebo", "Arial Hebrew", system-ui, sans-serif;
+      color: var(--ink);
+      direction: rtl;
+    }
+
+    /* per-language font assignments */
+    [lang="he"] { font-family: "Heebo", "Arial Hebrew", system-ui, sans-serif; }
+    [lang="ar"] { font-family: "Cairo", "Geeza Pro", "Arial", system-ui, sans-serif; }
+    [lang="ru"] { font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+
+    /* ---------- screen toolbar ---------- */
+    .toolbar {
+      position: fixed; top: 14px; left: 14px; z-index: 50;
+      display: flex; gap: 10px;
+    }
+    .toolbar button, .toolbar a {
+      background: var(--teal); color: #fff;
+      border: 0; padding: 10px 18px;
+      border-radius: 999px; cursor: pointer;
+      font-family: inherit; font-weight: 700; font-size: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.4);
+      text-decoration: none;
+      display: inline-block;
+    }
+    .toolbar button:hover, .toolbar a:hover { background: var(--teal-deep); }
+    .toolbar .secondary { background: #5b6779; }
+
+    /* ---------- screen scaling stage ---------- */
+    .stage {
+      transform-origin: top center;
+      transform: scale(0.45);
+      width: 594mm;
+      margin: 0 auto;
+      margin-bottom: calc(841mm * -0.55);
+    }
+
+    /* ---------- page canvas (A1 portrait, real size) ---------- */
+    .page {
+      width: 594mm;
+      height: 841mm;
+      background: var(--cream);
+      padding: 22mm 22mm 18mm;
+      box-shadow: 0 20px 80px rgba(0,0,0,.6);
+      position: relative;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+
+    .page::before, .page::after {
+      content: ""; position: absolute; left: 0; right: 0; height: 10mm;
+      background: linear-gradient(90deg, var(--teal) 0%, #4f97a3 50%, var(--coral) 100%);
+    }
+    .page::before { top: 0; }
+    .page::after  { bottom: 0; }
+
+    /* ---------- language tag (HE/AR/RU pill in card corner) ---------- */
+    .ltag {
+      display: inline-block;
+      font-family: "Inter", "Helvetica Neue", sans-serif;
+      font-weight: 800; font-size: 9pt;
+      letter-spacing: .08em;
+      color: #fff;
+      padding: 1mm 2.5mm;
+      border-radius: 999px;
+      margin-inline-end: 2.5mm;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .ltag.he { background: var(--tag-he); }
+    .ltag.ar { background: var(--tag-ar); }
+    .ltag.ru { background: var(--tag-ru); }
+
+    /* a row inside a card that carries one language */
+    .row-lang {
+      display: flex; align-items: flex-start; gap: 2mm;
+      margin-bottom: 1.6mm;
+    }
+    .row-lang:last-child { margin-bottom: 0; }
+    .row-lang .ltag { flex: 0 0 auto; margin-top: 1mm; }
+    .row-lang .lcontent { flex: 1; min-width: 0; }
+
+    /* a stack of three lang rows separated by hairlines */
+    .stack {
+      display: flex; flex-direction: column;
+    }
+    .stack > * + * {
+      border-top: 1px dashed rgba(0,0,0,.13);
+      padding-top: 2.5mm;
+      margin-top: 2.5mm;
+    }
+
+    /* ---------- HEADER ---------- */
+    .head {
+      text-align: center;
+      margin-top: 4mm;
+      position: relative;
+    }
+    .head .kicker-stack {
+      display: flex; justify-content: center; align-items: center;
+      gap: 6mm; flex-wrap: wrap;
+      font-size: 22pt; color: var(--teal); font-weight: 700;
+      letter-spacing: .01em; margin: 0 0 3mm;
+    }
+    .head .kicker-stack span { display: inline-flex; align-items: center; gap: 2mm; }
+    .head .brand {
+      font-size: 80pt; font-weight: 900; letter-spacing: .005em;
+      color: var(--navy); margin: 0; line-height: .95;
+      font-family: "Inter", "Helvetica Neue", sans-serif;
+    }
+    .head .tagline-stack {
+      display: flex; justify-content: center; align-items: center;
+      gap: 6mm; flex-wrap: wrap;
+      margin: 5mm 0 0;
+      font-size: 15pt; color: var(--muted); font-weight: 500;
+    }
+    .head .tagline-stack span { display: inline-flex; align-items: center; gap: 2mm; }
+    .divider {
+      width: 120mm; height: 3px; margin: 6mm auto 0;
+      background: linear-gradient(90deg, transparent, var(--coral), transparent);
+    }
+
+    /* QR corner */
+    .qr-corner {
+      position: absolute;
+      top: 14mm; left: 18mm;
+      background: #fff;
+      border-radius: 7mm;
+      padding: 4mm 4mm 3mm;
+      box-shadow: 0 4px 14px rgba(0,0,0,.08);
+      border: 1px solid #ede5d3;
+      text-align: center;
+      width: 56mm;
+    }
+    .qr-corner img {
+      width: 44mm; height: 44mm;
+      display: block; margin: 0 auto 2mm;
+    }
+    .qr-corner .qr-label {
+      font-size: 9pt; font-weight: 800; color: var(--navy);
+      line-height: 1.25;
+    }
+    .qr-corner .qr-sub {
+      font-size: 8pt; color: var(--muted);
+      margin-top: 1mm;
+      font-family: "Inter", sans-serif;
+      letter-spacing: .06em;
+    }
+
+    /* ---------- WHAT IS box ---------- */
+    .what-is {
+      margin: 8mm 0 0;
+      background: #fff;
+      border: 1px solid #ede5d3;
+      border-radius: 9mm;
+      padding: 7mm 9mm;
+      box-shadow: 0 4px 10px rgba(0,0,0,.04);
+    }
+    .what-is h2 {
+      font-size: 22pt; margin: 0 0 4mm;
+      color: var(--navy); font-weight: 800;
+      display: flex; gap: 8mm; flex-wrap: wrap; align-items: baseline;
+    }
+    .what-is h2 .he { color: var(--navy); }
+    .what-is h2 .ar { color: var(--coral); font-size: 20pt; }
+    .what-is h2 .ru { color: var(--teal); font-size: 18pt; font-weight: 800; }
+
+    .what-is .defs {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5mm 8mm;
+    }
+    .what-is .def {
+      border-inline-start: 4px solid var(--teal);
+      padding-inline-start: 5mm;
+    }
+    .what-is .def .term {
+      font-weight: 900; color: var(--teal);
+      font-size: 17pt; letter-spacing: .02em;
+      font-family: "Inter", sans-serif;
+      margin-bottom: 2mm;
+    }
+    .what-is .def p {
+      margin: 0 0 1.5mm; color: var(--muted);
+      font-size: 11.5pt; line-height: 1.35;
+    }
+    .what-is .def p:last-child { margin-bottom: 0; }
+    .what-is .def p .ltag { font-size: 7.5pt; padding: 0.6mm 1.8mm; }
+
+    /* ---------- INTRO LINE ---------- */
+    .intro {
+      margin: 7mm 0 5mm;
+      text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 1.5mm;
+    }
+    .intro p { margin: 0; font-size: 16pt; color: var(--navy); font-weight: 800; }
+    .intro p .ltag { font-size: 8pt; padding: 0.6mm 2mm; }
+
+    /* ---------- SENSES GRID ---------- */
+    .senses {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 3.5mm;
+    }
+    .sense {
+      border-radius: 8mm;
+      padding: 5mm 4.5mm;
+      box-shadow: 0 3px 8px rgba(0,0,0,.06);
+      display: flex; flex-direction: column;
+      position: relative;
+    }
+    .sense .icon {
+      width: 16mm; height: 16mm;
+      background: rgba(255,255,255,.65);
+      border-radius: 50%;
+      display: grid; place-items: center;
+      margin: 0 auto 2.5mm;
+    }
+    .sense .icon svg { width: 9.5mm; height: 9.5mm; color: var(--navy); }
+    .sense .names {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 1mm; margin-bottom: 2.5mm;
+    }
+    .sense .names .nm-he { font-size: 19pt; font-weight: 900; color: var(--navy); }
+    .sense .names .nm-ar { font-size: 17pt; font-weight: 800; color: var(--coral); }
+    .sense .names .nm-ru { font-size: 13pt; font-weight: 800; color: var(--teal); letter-spacing: .01em; }
+
+    .sense .why .row-lang { font-size: 9pt; line-height: 1.32; color: var(--muted); }
+    .sense .why .ltag { font-size: 7pt; padding: 0.4mm 1.6mm; }
+    .sense .why { margin-bottom: 3mm; }
+
+    .sense .tips-label {
+      font-size: 9.5pt; font-weight: 800; color: var(--teal);
+      margin: 0 0 1.5mm;
+      text-align: center;
+      border-top: 1px dashed rgba(0,0,0,.18);
+      padding-top: 2.5mm;
+    }
+    .sense .tips .row-lang { font-size: 9pt; line-height: 1.35; color: var(--ink); }
+    .sense .tips .ltag { font-size: 7pt; padding: 0.4mm 1.6mm; }
+    .sense .tips ul {
+      margin: 0; padding-inline-start: 4mm;
+      list-style: disc;
+    }
+    .sense .tips ul li { margin-bottom: 0.6mm; }
+    .sense .tips ul[dir="ltr"] { padding-inline-start: 4mm; }
+
+    .sense.hearing { background: var(--c-hear);  }
+    .sense.touch   { background: var(--c-touch); }
+    .sense.smell   { background: var(--c-smell); }
+    .sense.sight   { background: var(--c-sight); }
+    .sense.taste   { background: var(--c-taste); }
+
+    /* ---------- SPEAKER LINE ---------- */
+    .speaker {
+      margin: 9mm 0 5mm;
+      text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 1.5mm;
+    }
+    .speaker p { margin: 0; font-size: 17pt; font-weight: 800; color: var(--coral); }
+    .speaker p .ltag { font-size: 8pt; padding: 0.6mm 2mm; }
+
+    /* ---------- SIGNS GRID ---------- */
+    .signs {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5mm;
+    }
+    .sign-card {
+      border-radius: 8mm; padding: 6mm 7mm;
+      box-shadow: 0 3px 8px rgba(0,0,0,.06);
+    }
+    .sign-card.calm   { background: var(--c-calm); }
+    .sign-card.stress { background: var(--c-stress); }
+    .sign-card h3 {
+      margin: 0 0 3mm; font-size: 17pt; font-weight: 900;
+      color: var(--navy);
+      display: flex; align-items: center; gap: 3mm; flex-wrap: wrap;
+    }
+    .sign-card h3 .badge {
+      display: inline-block; width: 6mm; height: 6mm;
+      border-radius: 50%; flex: 0 0 auto;
+    }
+    .sign-card h3 .ar { color: var(--coral); font-size: 16pt; }
+    .sign-card h3 .ru { color: var(--teal); font-size: 13pt; }
+    .sign-card.calm   h3 .badge { background: #69a983; }
+    .sign-card.stress h3 .badge { background: var(--coral); }
+
+    .sign-card .lists { margin-top: 2mm; }
+    .sign-card .lists .row-lang { font-size: 11pt; line-height: 1.4; }
+    .sign-card .lists ul { margin: 0; padding-inline-start: 6mm; list-style: disc; }
+    .sign-card .lists ul li { margin-bottom: 0.6mm; }
+    .sign-card .note {
+      margin: 4mm 0 0;
+      border-top: 1px dashed rgba(0,0,0,.18); padding-top: 2.5mm;
+      font-style: italic; color: var(--muted);
+    }
+    .sign-card .note .row-lang { font-size: 9.5pt; line-height: 1.35; }
+    .sign-card .lists .ltag,
+    .sign-card .note .ltag { font-size: 7pt; padding: 0.4mm 1.6mm; }
+
+    /* ---------- HELPER (how to help today) ---------- */
+    .helper {
+      margin: 7mm 0 0;
+      background: var(--c-helper);
+      border-radius: 8mm;
+      padding: 6mm 8mm;
+    }
+    .helper h2 {
+      margin: 0 0 4mm; font-size: 18pt; font-weight: 900; color: var(--navy);
+      display: flex; align-items: center; gap: 4mm; flex-wrap: wrap;
+    }
+    .helper h2 svg { width: 8mm; height: 8mm; color: var(--coral); flex: 0 0 auto; }
+    .helper h2 .ar { color: var(--coral); font-size: 16pt; }
+    .helper h2 .ru { color: var(--teal); font-size: 14pt; }
+
+    .helper-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 3.5mm 6mm;
+    }
+    .helper-grid .cell {
+      background: #fff;
+      border-radius: 4mm;
+      padding: 3mm 4mm;
+      box-shadow: 0 2px 4px rgba(0,0,0,.04);
+    }
+    .helper-grid .cell .row-lang {
+      font-size: 10pt; line-height: 1.32; color: var(--ink); font-weight: 600;
+    }
+    .helper-grid .cell .ltag { font-size: 7pt; padding: 0.4mm 1.6mm; }
+    .helper-grid .cell .row-lang::before {
+      content: "♥"; color: var(--coral); font-weight: 900; margin-inline-end: 1mm;
+      display: none; /* keep clean — heart only in title */
+    }
+
+    /* ---------- FOOTER ---------- */
+    .foot {
+      margin-top: auto;
+      padding-top: 6mm;
+      text-align: center;
+    }
+    .foot .we-are {
+      display: flex; flex-direction: column; align-items: center; gap: 1mm;
+      margin-bottom: 3mm;
+    }
+    .foot .we-are p { margin: 0; font-size: 11pt; color: var(--muted); }
+    .foot .closing {
+      display: flex; flex-direction: column; align-items: center; gap: 1.5mm;
+    }
+    .foot .closing p {
+      margin: 0; font-size: 15pt; font-weight: 900; color: var(--teal-deep);
+    }
+    .foot .closing p::after {
+      content: "  ♥"; color: var(--coral);
+    }
+    .foot .ltag { font-size: 7pt; padding: 0.4mm 1.6mm; }
+
+    /* ---------- SCREEN-NARROW VIEWING (preview only) ---------- */
+    @media (max-width: 1400px) {
+      .stage { transform: scale(0.35); margin-bottom: calc(841mm * -0.65); }
+    }
+    @media (max-width: 1000px) {
+      .stage { transform: scale(0.25); margin-bottom: calc(841mm * -0.75); }
+    }
+    @media (max-width: 700px) {
+      .stage { transform: scale(0.18); margin-bottom: calc(841mm * -0.82); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- screen-only toolbar -->
+  <div class="toolbar">
+    <button onclick="window.print()">הדפסה / שמירה כ-PDF</button>
+    <a class="secondary" href="./">חזרה לאתר</a>
+  </div>
+
+  <!-- SVG icon defs (used by <use href="#id"/>) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-ear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 8a6 6 0 1 1 12 0c0 4-3 4-3 7a3 3 0 0 1-6 0"/>
+        <path d="M9 8a3 3 0 0 1 6 0"/>
+      </symbol>
+      <symbol id="i-hand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 13V5a1.5 1.5 0 0 1 3 0v6"/>
+        <path d="M10 11V3.5a1.5 1.5 0 0 1 3 0V11"/>
+        <path d="M13 11V4.5a1.5 1.5 0 0 1 3 0V13"/>
+        <path d="M16 13V7a1.5 1.5 0 0 1 3 0v8a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-2a2 2 0 0 1 3-1.7"/>
+      </symbol>
+      <symbol id="i-nose" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3v12"/>
+        <path d="M12 15c-3 0-5 1.5-5 3 0 1 1.5 2 5 2s5-1 5-2c0-1.5-2-3-5-3z"/>
+        <path d="M9 18.5h6"/>
+      </symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </symbol>
+      <symbol id="i-lips" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12c2-3 5-4 9-4s7 1 9 4c-2 3-5 4-9 4s-7-1-9-4z"/>
+        <path d="M3 12c1.5 0 3-.5 4.5-1.5"/>
+        <path d="M21 12c-1.5 0-3-.5-4.5-1.5"/>
+        <path d="M12 8v8"/>
+      </symbol>
+      <symbol id="i-heart" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 21s-7-4.5-9.5-9C1 8.5 3 4.5 7 4.5c2 0 3.5 1 5 2.5 1.5-1.5 3-2.5 5-2.5 4 0 6 4 4.5 7.5C19 16.5 12 21 12 21z"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="stage">
+    <article class="page">
+
+      <!-- QR corner -->
+      <aside class="qr-corner">
+        <img src="qr.png" alt="QR code → SENSE guide site" />
+        <div class="qr-label" lang="he" dir="rtl">סרקו לגרסה הדיגיטלית המלאה</div>
+        <div class="qr-sub">עברית · العربية · Русский</div>
+      </aside>
+
+      <!-- HEADER -->
+      <header class="head">
+        <div class="kicker-stack">
+          <span lang="he" dir="rtl"><span class="ltag he">HE</span>יחד מקדמים התפתחות</span>
+          <span lang="ar" dir="rtl"><span class="ltag ar">AR</span>معًا ندعم النمو</span>
+          <span lang="ru" dir="ltr"><span class="ltag ru">RU</span>Вместе ради развития</span>
+        </div>
+        <h1 class="brand">SENSE</h1>
+        <div class="tagline-stack">
+          <span lang="he" dir="rtl"><span class="ltag he">HE</span>טיפול התפתחותי · חוויה תחושתית מותאמת · קשר משמעותי</span>
+          <span lang="ar" dir="rtl"><span class="ltag ar">AR</span>رعاية تطوّرية · تجربة حسية ملائمة · تواصل ذو معنى</span>
+          <span lang="ru" dir="ltr"><span class="ltag ru">RU</span>Развивающий уход · бережная сенсорная среда · тёплая связь</span>
+        </div>
+        <div class="divider"></div>
+      </header>
+
+      <!-- WHAT IS -->
+      <section class="what-is">
+        <h2>
+          <span class="he" lang="he" dir="rtl">מה זה SENSE?</span>
+          <span class="ar" lang="ar" dir="rtl">ما هو SENSE؟</span>
+          <span class="ru" lang="ru" dir="ltr">Что такое SENSE?</span>
+        </h2>
+        <div class="defs">
+          <div class="def">
+            <div class="term">SENSE</div>
+            <p lang="he" dir="rtl"><span class="ltag he">HE</span>תוכנית מתמקדת בחוויות תחושתיות מותאמות, התומכות בהתפתחות המוח, בויסות ובקשר.</p>
+            <p lang="ar" dir="rtl"><span class="ltag ar">AR</span>برنامج يركّز على تجارب حسّية ملائمة، تدعم تطوّر الدماغ، التنظيم الذاتي، والتواصل.</p>
+            <p lang="ru" dir="ltr"><span class="ltag ru">RU</span>Программа бережных сенсорных переживаний, поддерживающих развитие мозга, саморегуляцию и привязанность.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- INTRO -->
+      <div class="intro">
+        <p lang="he" dir="rtl"><span class="ltag he">HE</span>הנוכחות, הקול והמגע שלכם — הם חלק מהטיפול!</p>
+        <p lang="ar" dir="rtl"><span class="ltag ar">AR</span>حضوركم وصوتكم ولمستكم — هي جزء من العلاج!</p>
+        <p lang="ru" dir="ltr"><span class="ltag ru">RU</span>Ваше присутствие, голос и прикосновение — это часть лечения!</p>
+      </div>
+
+      <!-- 5 SENSES -->
+      <section class="senses">
+
+        <!-- HEARING -->
+        <div class="sense hearing">
+          <div class="icon"><svg><use href="#i-ear"/></svg></div>
+          <div class="names">
+            <div class="nm-he" lang="he" dir="rtl">שמיעה</div>
+            <div class="nm-ar" lang="ar" dir="rtl">السمع</div>
+            <div class="nm-ru" lang="ru" dir="ltr">Слух</div>
+          </div>
+          <div class="why stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">הפגים רגישים לרעש; קול מוכר מרגיע ומסייע בוויסות.</div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">الخدج حساسون للضجيج؛ الصوت المألوف يُهدّئ ويساعد على التنظيم.</div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">Недоношенные малыши чувствительны к шуму; знакомый голос успокаивает и помогает саморегуляции.</div></div>
+          </div>
+          <div class="tips-label">
+            <span lang="he" dir="rtl">מה אפשר לעשות?</span> · <span lang="ar" dir="rtl">ماذا نفعل؟</span> · <span lang="ru" dir="ltr">Что делать?</span>
+          </div>
+          <div class="tips stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent"><ul><li>דברו אליו בקול רגוע</li><li>שירו, קראו סיפור</li><li>צמצמו רעש סביבתי</li></ul></div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent"><ul><li>تحدّثوا إليه بصوت هادئ</li><li>غنّوا له واقرؤوا قصة</li><li>قلّلوا الضجيج المحيط</li></ul></div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent"><ul><li>говорите с ним спокойным голосом</li><li>пойте, читайте сказку</li><li>уменьшайте шум вокруг</li></ul></div></div>
+          </div>
+        </div>
+
+        <!-- TOUCH -->
+        <div class="sense touch">
+          <div class="icon"><svg><use href="#i-hand"/></svg></div>
+          <div class="names">
+            <div class="nm-he" lang="he" dir="rtl">מגע</div>
+            <div class="nm-ar" lang="ar" dir="rtl">اللمس</div>
+            <div class="nm-ru" lang="ru" dir="ltr">Прикосновение</div>
+          </div>
+          <div class="why stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">מגע תומך ומכיל נותן תחושת ביטחון ומסייע בהתפתחות.</div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">اللمس الداعم والمحتوي يمنح شعور الأمان ويدعم النمو.</div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">Поддерживающее, обнимающее прикосновение даёт чувство безопасности и помогает развитию.</div></div>
+          </div>
+          <div class="tips-label">
+            <span lang="he" dir="rtl">מה אפשר לעשות?</span> · <span lang="ar" dir="rtl">ماذا نفعل؟</span> · <span lang="ru" dir="ltr">Что делать?</span>
+          </div>
+          <div class="tips stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent"><ul><li>קנגורו (עור לעור)</li><li>החזקה תומכת בידיים</li><li>מגע עדין ואיטי</li></ul></div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent"><ul><li>رعاية الكنغر (جلد-لجلد)</li><li>احتواء داعم بالأيدي</li><li>لمس لطيف وبطيء</li></ul></div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent"><ul><li>метод кенгуру (кожа к коже)</li><li>мягко поддерживайте ладонями</li><li>прикасайтесь нежно и медленно</li></ul></div></div>
+          </div>
+        </div>
+
+        <!-- SMELL -->
+        <div class="sense smell">
+          <div class="icon"><svg><use href="#i-nose"/></svg></div>
+          <div class="names">
+            <div class="nm-he" lang="he" dir="rtl">ריח</div>
+            <div class="nm-ar" lang="ar" dir="rtl">الرائحة</div>
+            <div class="nm-ru" lang="ru" dir="ltr">Обоняние</div>
+          </div>
+          <div class="why stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">ריח הורים מוכר ומרגיע את הפג.</div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">رائحة الأهل مألوفة ومُهدِّئة للخديج.</div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">Запах родителей знаком малышу и успокаивает его.</div></div>
+          </div>
+          <div class="tips-label">
+            <span lang="he" dir="rtl">מה אפשר לעשות?</span> · <span lang="ar" dir="rtl">ماذا نفعل؟</span> · <span lang="ru" dir="ltr">Что делать?</span>
+          </div>
+          <div class="tips stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent"><ul><li>הניחו בד עם הריח שלכם לידו</li><li>הגיעו עם ריח נקי ומוכר (סבון קבוע)</li><li>קנגורו</li></ul></div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent"><ul><li>ضعوا قطعة قماش برائحتكم بقربه</li><li>احضروا برائحة نظيفة ومألوفة (صابون ثابت)</li><li>رعاية الكنغر</li></ul></div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent"><ul><li>положите рядом ткань с вашим запахом</li><li>приходите с привычным чистым запахом (одно и то же мыло)</li><li>метод кенгуру</li></ul></div></div>
+          </div>
+        </div>
+
+        <!-- SIGHT -->
+        <div class="sense sight">
+          <div class="icon"><svg><use href="#i-eye"/></svg></div>
+          <div class="names">
+            <div class="nm-he" lang="he" dir="rtl">ראייה</div>
+            <div class="nm-ar" lang="ar" dir="rtl">الرؤية</div>
+            <div class="nm-ru" lang="ru" dir="ltr">Зрение</div>
+          </div>
+          <div class="why stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">העיניים רגישות לאור.</div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">العيون حسّاسة للضوء.</div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">Глазки очень чувствительны к свету.</div></div>
+          </div>
+          <div class="tips-label">
+            <span lang="he" dir="rtl">מה אפשר לעשות?</span> · <span lang="ar" dir="rtl">ماذا نفعل؟</span> · <span lang="ru" dir="ltr">Что делать?</span>
+          </div>
+          <div class="tips stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent"><ul><li>שמרו על תאורה רכה ונעימה</li><li>קשר עין קצר ועדין כשהפג ערני ורגוע</li><li>כסו את האינקובטור</li></ul></div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent"><ul><li>حافظوا على إضاءة ناعمة وهادئة</li><li>تواصل بصري قصير ولطيف عندما يكون مستيقظًا وهادئًا</li><li>غطّوا الحاضنة</li></ul></div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent"><ul><li>держите мягкий приглушённый свет</li><li>короткий нежный контакт глазами, когда малыш спокоен и бодр</li><li>накрывайте кувез</li></ul></div></div>
+          </div>
+        </div>
+
+        <!-- TASTE -->
+        <div class="sense taste">
+          <div class="icon"><svg><use href="#i-lips"/></svg></div>
+          <div class="names">
+            <div class="nm-he" lang="he" dir="rtl">טעם</div>
+            <div class="nm-ar" lang="ar" dir="rtl">التذوّق</div>
+            <div class="nm-ru" lang="ru" dir="ltr">Вкус</div>
+          </div>
+          <div class="why stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">דרך הטעם הפג לומד למצוץ, לווסת ולהכיר.</div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">من خلال التذوّق يتعلّم الخديج المصّ، التنظيم الذاتي والتعرّف.</div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">Через вкус малыш учится сосать, саморегулироваться и узнавать мир.</div></div>
+          </div>
+          <div class="tips-label">
+            <span lang="he" dir="rtl">מה אפשר לעשות?</span> · <span lang="ar" dir="rtl">ماذا نفعل؟</span> · <span lang="ru" dir="ltr">Что делать?</span>
+          </div>
+          <div class="tips stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent"><ul><li>הנקה / חלב אם, אם אפשר</li><li>טיפות חלב אם על מוצץ</li></ul></div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent"><ul><li>رضاعة طبيعية / حليب الأم إن أمكن</li><li>قطرات من حليب الأم على اللهاية</li></ul></div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent"><ul><li>грудное вскармливание / молоко мамы, если возможно</li><li>капли грудного молока на соску-пустышку</li></ul></div></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SPEAKER LINE -->
+      <div class="speaker">
+        <p lang="he" dir="rtl"><span class="ltag he">HE</span>~ הפג שלי מדבר איתי — בואו נכיר את הסימנים ~</p>
+        <p lang="ar" dir="rtl"><span class="ltag ar">AR</span>~ خديجي يتحدّث إليّ — لنتعرّف على الإشارات ~</p>
+        <p lang="ru" dir="ltr"><span class="ltag ru">RU</span>~ Мой малыш говорит со мной — давайте узнаем его сигналы ~</p>
+      </div>
+
+      <!-- SIGNS GRID -->
+      <section class="signs">
+
+        <div class="sign-card calm">
+          <h3>
+            <span class="badge"></span>
+            <span lang="he" dir="rtl">סימני רוגע — אני מרגיש טוב</span>
+            <span class="ar" lang="ar" dir="rtl">إشارات الراحة — أنا بخير</span>
+            <span class="ru" lang="ru" dir="ltr">Сигналы спокойствия — мне хорошо</span>
+          </h3>
+          <div class="lists stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">
+              <ul>
+                <li>צבע יציב</li>
+                <li>נשימה רגועה וסדירה</li>
+                <li>ידיים ורגליים רפויות</li>
+                <li>פנים רגועות</li>
+                <li>שפתיים רפויות / מציצה</li>
+                <li>שינה רגועה</li>
+              </ul>
+            </div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">
+              <ul>
+                <li>لون مستقرّ</li>
+                <li>تنفّس هادئ ومنتظم</li>
+                <li>يدان ورجلان مرتخيتان</li>
+                <li>وجه مسترخٍ</li>
+                <li>شفتان مرتخيتان / مصّ</li>
+                <li>نوم هادئ</li>
+              </ul>
+            </div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">
+              <ul>
+                <li>ровный цвет кожи</li>
+                <li>спокойное и ровное дыхание</li>
+                <li>расслабленные ручки и ножки</li>
+                <li>спокойное личико</li>
+                <li>расслабленные губки / сосание</li>
+                <li>спокойный сон</li>
+              </ul>
+            </div></div>
+          </div>
+          <div class="note stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">כשאני רגוע — אני יכול ללמוד, לגדול ולהתחבר אליכם טוב יותר.</div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">حين أكون هادئًا — أتعلّم وأنمو وأتواصل معكم بشكل أفضل.</div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">Когда я спокоен — я могу учиться, расти и крепче связываться с вами.</div></div>
+          </div>
+        </div>
+
+        <div class="sign-card stress">
+          <h3>
+            <span class="badge"></span>
+            <span lang="he" dir="rtl">סימני סטרס — אני מוצף</span>
+            <span class="ar" lang="ar" dir="rtl">إشارات التوتّر — أنا مرهَق</span>
+            <span class="ru" lang="ru" dir="ltr">Сигналы стресса — мне тяжело</span>
+          </h3>
+          <div class="lists stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">
+              <ul>
+                <li>שינוי צבע (חיוור / אדמומי / כחלחל)</li>
+                <li>עצירת נשימה או נשימות מהירות</li>
+                <li>פיהוק, כיווץ פנים</li>
+                <li>פריסת הידיים והאצבעות</li>
+                <li>בכי או אי-שקט</li>
+              </ul>
+            </div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">
+              <ul>
+                <li>تغيّر اللون (شحوب / احمرار / زرقة)</li>
+                <li>توقّف نفس أو تنفّس سريع</li>
+                <li>تثاؤب، تجعّد الوجه</li>
+                <li>بسط اليدين والأصابع</li>
+                <li>بكاء أو عدم استقرار</li>
+              </ul>
+            </div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">
+              <ul>
+                <li>изменение цвета (бледный / красный / синеватый)</li>
+                <li>задержки дыхания или учащённое дыхание</li>
+                <li>зевота, сморщенное личико</li>
+                <li>растопыренные ручки и пальчики</li>
+                <li>плач или беспокойство</li>
+              </ul>
+            </div></div>
+          </div>
+          <div class="note stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">אם זיהיתם סימני סטרס — הפחיתו גירויים, תנו זמן מנוחה ותמכו בעדינות.</div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">إذا لاحظتم إشارات توتّر — قلّلوا المحفزات، امنحوه وقت راحة، ودعموه بلطف.</div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">Если заметили сигналы стресса — уменьшите раздражители, дайте время отдохнуть и мягко поддержите.</div></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- HOW CAN I HELP -->
+      <section class="helper">
+        <h2>
+          <svg><use href="#i-heart"/></svg>
+          <span lang="he" dir="rtl">איך אני יכול לעזור לפג היום?</span>
+          <span class="ar" lang="ar" dir="rtl">كيف أساعد طفلي الخديج اليوم؟</span>
+          <span class="ru" lang="ru" dir="ltr">Как я могу помочь моему малышу сегодня?</span>
+        </h2>
+        <div class="helper-grid">
+          <div class="cell stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">עשו קנגורו</div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">قوموا برعاية الكنغر</div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">Делайте кенгуру (кожа к коже)</div></div>
+          </div>
+          <div class="cell stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">דברו, שירו, קראו לו</div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">تحدّثوا، غنّوا، اقرؤوا له</div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">Говорите, пойте, читайте ему</div></div>
+          </div>
+          <div class="cell stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">שמרו על שקט רגוע</div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">حافظوا على هدوء لطيف</div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">Сохраняйте мягкую тишину</div></div>
+          </div>
+          <div class="cell stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">תמכו במגע עדין</div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">ادعموا باللمس اللطيف</div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">Поддерживайте бережным прикосновением</div></div>
+          </div>
+          <div class="cell stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">הסתכלו באהבה</div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">انظروا إليه بمحبّة</div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">Смотрите на него с любовью</div></div>
+          </div>
+          <div class="cell stack">
+            <div class="row-lang" lang="he" dir="rtl"><span class="ltag he">HE</span><div class="lcontent">היו נוכחים בסבלנות</div></div>
+            <div class="row-lang" lang="ar" dir="rtl"><span class="ltag ar">AR</span><div class="lcontent">كونوا حاضرين بصبر</div></div>
+            <div class="row-lang" lang="ru" dir="ltr"><span class="ltag ru">RU</span><div class="lcontent">Будьте рядом терпеливо</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="foot">
+        <div class="we-are">
+          <p lang="he" dir="rtl"><span class="ltag he">HE</span> אנחנו כאן יחד אתכם — לכל שאלה, תמיכה והכוונה.</p>
+          <p lang="ar" dir="rtl"><span class="ltag ar">AR</span> نحن هنا معكم — لأيّ سؤال، دعم وتوجيه.</p>
+          <p lang="ru" dir="ltr"><span class="ltag ru">RU</span> Мы здесь, рядом с вами — для любого вопроса, поддержки и совета.</p>
+        </div>
+        <div class="closing">
+          <p lang="he" dir="rtl">כל רגע קטן אתכם — בונה עולם שלם</p>
+          <p lang="ar" dir="rtl">كل لحظة صغيرة معكم — تبني عالمًا كاملاً</p>
+          <p lang="ru" dir="ltr">Каждая маленькая минута с вами — строит целый мир</p>
+        </div>
+      </footer>
+
+    </article>
+  </div>
+
+</body>
+</html>

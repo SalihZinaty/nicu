@@ -114,21 +114,10 @@
     <!-- HERO -->
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-carousel" aria-hidden="true">
-        <!-- Track is duplicated 2x so the loop is seamless.
-             data-pos tunes the crop focal point per image. -->
-        <div class="carousel-track">
-          <div class="carousel-slide" data-pos="right"> <img src="images/hero.jpg"      alt="" loading="eager" /></div>
-          <div class="carousel-slide" data-pos="right"> <img src="images/shush.jpg"     alt="" loading="lazy"  /></div>
-          <div class="carousel-slide" data-pos="bottom"><img src="images/incubator.jpg" alt="" loading="lazy"  /></div>
-          <div class="carousel-slide" data-pos="center"><img src="images/care.jpg"      alt="" loading="lazy"  /></div>
-          <div class="carousel-slide" data-pos="center"><img src="images/hand.jpg"      alt="" loading="lazy"  /></div>
-          <!-- duplicate set for seamless loop — eager so they're ready when the wrap happens -->
-          <div class="carousel-slide" data-pos="right" aria-hidden="true"> <img src="images/hero.jpg"      alt="" loading="eager" decoding="async" /></div>
-          <div class="carousel-slide" data-pos="right" aria-hidden="true"> <img src="images/shush.jpg"     alt="" loading="eager" decoding="async" /></div>
-          <div class="carousel-slide" data-pos="bottom" aria-hidden="true"><img src="images/incubator.jpg" alt="" loading="eager" decoding="async" /></div>
-          <div class="carousel-slide" data-pos="center" aria-hidden="true"><img src="images/care.jpg"      alt="" loading="eager" decoding="async" /></div>
-          <div class="carousel-slide" data-pos="center" aria-hidden="true"><img src="images/hand.jpg"      alt="" loading="eager" decoding="async" /></div>
-        </div>
+        <!-- Slides are built by app.js: a random subset of the photo pool is
+             shuffled each visit, then rendered as two identical halves so the
+             -50% scroll loops seamlessly. See renderCarousel() in app.js. -->
+        <div class="carousel-track"></div>
       </div>
       <div class="hero-text">
         <span class="hero-kicker" data-bind="hero.kicker"></span>
@@ -248,6 +237,7 @@
 
   <footer class="site-footer">
     <div class="container">
+      <img class="footer-logo" src="images/logo.png" alt="" width="250" height="321" loading="lazy" decoding="async" />
       <p class="footer-msg" data-bind="footer.message"></p>
       <p class="footer-contact" data-bind="footer.contact"></p>
     </div>

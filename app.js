@@ -30,6 +30,16 @@
     return n;
   };
 
+  // Fisher–Yates shuffle — returns a new shuffled copy, leaves input untouched.
+  const shuffled = (arr) => {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+
   const iconSvg = (id) => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
@@ -324,6 +334,50 @@
     }
   }
 
+  // --- hero carousel --------------------------------------------------------
+  // Full photo pool. `pos` is the crop focal point (see .carousel-slide[data-pos]
+  // in styles.css) so off-center subjects stay in frame after the cover-crop.
+  const CAROUSEL_POOL = [
+    { src: "images/hero.jpg",          pos: "right"  },
+    { src: "images/shush.jpg",         pos: "right"  },
+    { src: "images/incubator.jpg",     pos: "bottom" },
+    { src: "images/care.jpg",          pos: "center" },
+    { src: "images/hand.jpg",          pos: "center" },
+    { src: "images/nurse-kiss.jpg",    pos: "center" },
+    { src: "images/baby-bath.jpg",     pos: "center" },
+    { src: "images/nurse-monitor.jpg", pos: "center" },
+    { src: "images/nurse-cradle.jpg",  pos: "center" },
+  ];
+  // How many photos to show per visit. Fewer than the pool, so each load
+  // surfaces a different mix.
+  const CAROUSEL_COUNT = 5;
+
+  function renderCarousel() {
+    const track = $(".carousel-track");
+    if (!track) return;
+
+    const count = Math.min(CAROUSEL_COUNT, CAROUSEL_POOL.length);
+    const pick = shuffled(CAROUSEL_POOL).slice(0, count);
+
+    // Drives the CSS animation duration (calc(--slide-time * --carousel-count))
+    // so the scroll speed stays constant no matter how many were picked.
+    const carousel = track.closest(".hero-carousel");
+    if (carousel) carousel.style.setProperty("--carousel-count", String(count));
+
+    // Two IDENTICAL halves: the track animates by exactly -50%, so both halves
+    // must hold the same slides in the same order for the wrap to be seamless.
+    track.innerHTML = "";
+    for (let half = 0; half < 2; half++) {
+      for (const item of pick) {
+        const attrs = { class: "carousel-slide", "data-pos": item.pos };
+        if (half === 1) attrs["aria-hidden"] = "true";
+        track.append(el("div", attrs,
+          el("img", { src: item.src, alt: "", loading: "lazy", decoding: "async" }),
+        ));
+      }
+    }
+  }
+
   // --- language ------------------------------------------------------------
   function updatePickerActive(code) {
     $$(".lang-pill").forEach((btn) => {
@@ -382,6 +436,9 @@
     const stored = localStorage.getItem(STORAGE_KEY);
     const code = (stored && CONTENT[stored]) ? stored : detectLang();
     applyLanguage(code);
+
+    // Hero photos: random subset, shuffled fresh on every page load.
+    renderCarousel();
 
     $$(".lang-pill").forEach((btn) => {
       btn.addEventListener("click", () => {

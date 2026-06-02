@@ -161,7 +161,11 @@ section { padding: 56px 0; }
   overflow: hidden;
   --slide-w: 72vw;            /* phone: one slide per view, next one peeks */
   --slide-aspect: 3 / 4;      /* every slide is portrait — same height for all */
-  --carousel-duration: 40s;
+  /* The slide list is built + shuffled in JS, so the count varies per visit.
+     Duration = per-slide time × slide-count keeps the scroll SPEED constant
+     regardless of how many photos were picked. JS sets --carousel-count. */
+  --slide-time: 8s;           /* phone: seconds of scroll per slide */
+  --carousel-count: 5;        /* fallback; overwritten by app.js */
   padding-block: 14px;
   /* Leading breathing room — lives on the container (not the track) so it
      doesn't break the seamless -50% wrap math. */
@@ -191,8 +195,8 @@ section { padding: 56px 0; }
      of the track have IDENTICAL widths. The animation translates by
      exactly -50% — any asymmetry (e.g. trailing padding) would cause
      a visible jump when the loop wraps. */
-  -webkit-animation: carousel-scroll var(--carousel-duration) linear infinite;
-          animation: carousel-scroll var(--carousel-duration) linear infinite;
+  -webkit-animation: carousel-scroll calc(var(--slide-time) * var(--carousel-count)) linear infinite;
+          animation: carousel-scroll calc(var(--slide-time) * var(--carousel-count)) linear infinite;
   will-change: transform;
   /* Promote to its own layer (belt-and-suspenders with will-change). */
   -webkit-transform: translate3d(0, 0, 0);
@@ -203,7 +207,8 @@ section { padding: 56px 0; }
 .carousel-slide {
   flex: 0 0 var(--slide-w);
   /* Spacing between slides — also keeps each half of the track exactly the
-     same width (5 × slide_w + 5 × 12px = 50% of 10-slide track). */
+     same width. app.js builds the track as two identical halves, so each half
+     is exactly 50% of the track regardless of how many slides were picked. */
   margin-inline-end: 12px;
   /* iOS Safari ≤15.4 has bugs computing aspect-ratio inside flex items.
      The padding-top hack below acts as a fallback height; modern browsers
@@ -313,7 +318,7 @@ section { padding: 56px 0; }
   .hero { grid-template-columns: 1.1fr 1fr; min-height: 80svh; align-items: center; }
   .hero-carousel {
     --slide-w: 340px;
-    --carousel-duration: 55s;
+    --slide-time: 11s;         /* desktop: slightly slower per slide */
   }
   .hero-carousel::after {
     /* Direct keywords for Safari compatibility — RTL override below. */
@@ -933,6 +938,18 @@ details[open] .howto-summary .ht-chev { transform: rotate(180deg); }
   color: #f0f5f6;
   padding: 32px 0;
   text-align: center;
+}
+/* Logo sits on a white chip so the teal/blue mark + Hebrew text stay legible
+   against the teal footer. Height-based sizing keeps the 250×321 aspect. */
+.footer-logo {
+  display: block;
+  height: 96px;
+  width: auto;
+  margin: 0 auto 18px;
+  padding: 12px 16px;
+  background: #fff;
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-1);
 }
 .footer-msg { font-size: 1.05rem; margin: 0 0 6px; font-weight: 600; }
 .footer-contact { margin: 0; color: #cfe1e4; font-size: .95rem; }
